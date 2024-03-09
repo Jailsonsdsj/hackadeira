@@ -1,24 +1,33 @@
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import { AppRoutes } from './AppRoutes';
 import './App.css';
 
-function App() {
+
+function App() {  
+  useEffect(() => {
+    const socket = new WebSocket('ws://0.tcp.sa.ngrok.io:12465');
+
+    socket.onopen = () => {
+        console.log('WebSocket connection established.');
+      
+    };
+
+    socket.onmessage = (event) => {
+        console.log('Received message from server:', event.data);
+        // Handle received message here
+    };
+
+    socket.onclose = () => {
+        console.log('WebSocket connection closed.');
+    }
+    return () => {
+        socket.onopen();
+        socket.onmessage();
+    };
+
+}, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p> 
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppRoutes/>
   );
 }
 
